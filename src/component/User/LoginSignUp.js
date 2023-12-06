@@ -1,17 +1,24 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useRef, useState, useEffect } from "react";
 import Loader from "../layout/Loader/Loader";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import "./LoginSignUp.css";
 import FaceIcon from "@material-ui/icons/Face";
 import profile from "../../images/profile.png";
-
+import { useNavigation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, login } from "../../actions/userAction";
+import { clearErrors, login, register } from "../../actions/userAction";
+import { useAlert } from "react-alert";
 
 const LoginSignUp = () => {
   const dispatch = useDispatch();
+  const alert = useAlert();
+  const Navigate = useNavigate();
+
+  const { error, loading, isAuthenticated } = useSelector(
+    (state) => state.user
+  );
 
   const loginTab = useRef(null);
   const registerTab = useRef(null);
@@ -30,8 +37,8 @@ const LoginSignUp = () => {
   const [avatar, setAvatar] = useState(profile);
   const [avatarPreview, setAvatarPreview] = useState(profile);
 
-  const loginSubmit = () => {
-    // e.preventDefault;
+  const loginSubmit = (e) => {
+    e.preventDefault();
     dispatch(login(loginEmail, loginPassword));
   };
 
@@ -44,7 +51,7 @@ const LoginSignUp = () => {
     myform.set("email", email);
     myform.set("password", password);
     myform.set("avatar", avatar);
-    console.log("Sign Up Form Submitted");
+    dispatch(register(myform));
   };
 
   const registerDataChange = (e) => {
@@ -61,6 +68,16 @@ const LoginSignUp = () => {
       setUser({ ...user, [e.target.name]: e.target.value });
     }
   };
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(error);
+    }
+    if (isAuthenticated) {
+      Navigate("/account");
+    }
+  }, [dispatch, Navigate, error, alert, isAuthenticated]);
+
   const switchTabs = (e, tab) => {
     if (tab === "login") {
       switcherTab.current.classList.add("shiftToNeutral");
@@ -81,6 +98,8 @@ const LoginSignUp = () => {
 
   return (
     <Fragment>
+      (loading?
+      <Loader />:
       <div className="LoginSignUpContainer">
         <div className="LoginSignUpBox">
           <div>
@@ -166,6 +185,7 @@ const LoginSignUp = () => {
           </form>
         </div>
       </div>
+      )
     </Fragment>
   );
 };
