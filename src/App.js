@@ -13,10 +13,13 @@ import LoginSignUp from "./component/User/LoginSignUp";
 import store from "./store.js";
 import { loadUser } from "./actions/userAction.js";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserOptions from "./component/layout/Header/UserOptions.js";
+import Profile from "./component/User/Profile.js";
+import ProtectedRoute from "./component/Route/ProtectedRoute.js";
 
 function App() {
+  const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   useEffect(() => {
     WebFont.load({
@@ -25,7 +28,7 @@ function App() {
       },
     });
     store.dispatch(loadUser());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Router>
@@ -37,6 +40,10 @@ function App() {
         <Route path="/Search" element={<Search />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:keyword" element={<Products />} />
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+          <Route path="/account" element={<Profile />} />
+        </Route>
+
         <Route path="/login" element={<LoginSignUp />} />
       </Routes>
       <Footer />
