@@ -71,7 +71,7 @@ const LoginSignUp = () => {
   useEffect(() => {
     if (error) {
       alert.error(error);
-      dispatch(error);
+      dispatch(clearErrors());
     }
     if (isAuthenticated) {
       Navigate("/account");
