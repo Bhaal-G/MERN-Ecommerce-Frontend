@@ -1,15 +1,9 @@
-import React, { Fragment, useRef, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Loader from "../layout/Loader/Loader";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./UpdatePassword.css";
-import FaceIcon from "@material-ui/icons/Face";
-import { useNavigation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clearErrors,
-  loadUser,
-  updatePassword,
-} from "../../actions/userAction";
+import { clearErrors, updatePassword } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 import { UPDATE_PASSWORD_RESET } from "../../constants/userConstant";
 import MetaData from "../layout/MetaData";
@@ -66,7 +60,6 @@ const UpdatePassword = () => {
               <h2 className="updatePasswordHeading">Update Profile</h2>
               <form
                 className="updatePasswordForm"
-                encType="multipart/form-data"
                 onSubmit={updatePasswordSubmit}
               >
                 <div className="loginPassword">
