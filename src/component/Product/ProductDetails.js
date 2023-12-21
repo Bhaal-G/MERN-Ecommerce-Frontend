@@ -9,15 +9,23 @@ import ReviewCard from "./ReviewCard.js";
 import Loader from "../layout/Loader/Loader.js";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
+import { addItemsToCart } from "../../actions/cartAction.js";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  console.log(id);
   const alert = useAlert();
   const dispatch = useDispatch();
 
   const { product, loading, error } = useSelector(
     (state) => state.productDetails
   );
+
+  const addToCartHandler = () => {
+    dispatch(addItemsToCart(id, quantity));
+    alert.success("Item Added To Cart");
+  };
+
   useEffect(() => {
     if (error) {
       alert.error(error);
@@ -91,7 +99,10 @@ const ProductDetails = () => {
                     <input readOnly type="number" value={quantity} />
                     <button onClick={increaseQuantity}>+</button>
                   </div>
-                  <button disabled={product.Stock < 1 ? true : false}>
+                  <button
+                    onClick={addToCartHandler}
+                    disabled={product.Stock < 1 ? true : false}
+                  >
                     Add to Cart
                   </button>
                 </div>
